@@ -14,38 +14,24 @@ class Solver:
             prev_state = None  # Init state
         if x < 0 or y < 0:  # Invalid action
             return None
-        cur_cost += step_cost if is_ucf else 1
+
+        cur_cost += 1
         s = (x, y, d, v)
 
         # Fast stop
 
-        # if self.env.goal == (x, y) and v == 0:
-        #     self.path[s] = prev_state
-        #     self.found = cur_cost, s
-        #     return None
-        if self.env.fuel_cost == cur_cost and v == 0:
-            self.path[s] = prev_state
-            self.found = cur_cost, s
-            return None
-
+        if self.env.goal == (x, y) and v == 0:
+             self.path[s] = prev_state
+             self.found = cur_cost, s
+             return None
         if s in self.seen:
             return None
 
-        if is_ucf:
-            # Not sure min path to s
-            prev_min_cost = self.mins.get(s, None)
-            if prev_min_cost is None or prev_min_cost > cur_cost:
-                self.mins[s] = cur_cost
-                self.path[s] = prev_state
-                return *s, cur_cost
-            else:
-                return None
-        else:
             # Sure min path to s
-            p = self.path.get(s, None)
-            if p is not None:
-                return None
-            self.path[s] = prev_state
+        p = self.path.get(s, None)
+        if p is not None:
+            return None
+        self.path[s] = prev_state
         return x, y, d, v, cur_cost
 
     def explore(self, s, cost, is_ucf):
@@ -56,7 +42,7 @@ class Solver:
         if self.found is not None:  # Fast stop
             return self.found
 
-        step_fn = self.step_ucf if is_ucf else self.step_bfs
+        step_fn = self.step_bfs
         # Action
         v = s[-1]
         if v == 0:
