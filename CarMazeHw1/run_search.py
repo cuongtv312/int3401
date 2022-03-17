@@ -22,6 +22,30 @@ def trace_back(solver, x, y, d, v, image):
         prev_state = solver.path[prev_state]
     return path
 
+def write_output(output_file, path, cost):
+    f = open(output_file, "w")
+    if cost != -1:
+        f.write('%i %i\n' % (cost, len(path) - 1))
+    else:
+        f.write('%i\n' % cost)
+    for i in reversed(range(0, len(path) - 1)):
+        action = ''
+        (x0, y0, d0, v0) = path[i + 1]
+        (x1, y1, d1, v1) = path[i]
+        if d0 == d1:
+            if v0 == v1:
+                action = 'O'
+            elif v0 < v1:
+                action = '+'
+            else: 
+                action = '-'
+        elif (d0 + d1) % 4 != 1:
+            action = 'L'
+        else:
+            action ='R'
+        f.write('%s ' % action)
+    f.close()
+    
 
 #%%
 if __name__ == "__main__":
@@ -29,6 +53,8 @@ if __name__ == "__main__":
 
     parser.add_argument('--input_file', type=str, default='input.txt',
                         help='Input file')
+    parser.add_argument('--output_file', type=str, default='car.out',
+                        help='Output file')
     parser.add_argument('--method', type=str, default='bfs',
                         help='The searching algorithm')
     parser.add_argument('--output_folder', type=str, default='./images',
@@ -37,6 +63,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     method = args.method
     inputmap = args.input_file
+    output_file = args.output_file
     output_folder = args.output_folder
 
     assert method in ('bfs')
@@ -58,6 +85,7 @@ if __name__ == "__main__":
     for s in reversed(path):
         print('->',s)
     print('Showing map and path') 
+    write_output(output_file, path, ans)
     env.image.show()
     env.image.save(os.path.join(output_folder, f'{method}_' + inputmap.split('/')[-1].split('.')[0] + '.png'))
 # %%
