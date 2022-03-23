@@ -55,23 +55,23 @@ if __name__ == "__main__":
                         help='Input file')
     parser.add_argument('--output_file', type=str, default='car.out',
                         help='Output file')
-    parser.add_argument('--method', type=str, default='bfs',
+    parser.add_argument('--method', type=int, default=0,
                         help='The searching algorithm')
-    parser.add_argument('--output_folder', type=str, default='./images',
-                        help='Base input folder')
+    #parser.add_argument('--output_folder', type=str, default='./images',
+    #                    help='Base input folder')
 
     args = parser.parse_args()
     method = args.method
     inputmap = args.input_file
     output_file = args.output_file
-    output_folder = args.output_folder
+    # output_folder = args.output_folder
 
-    assert method in ('bfs')
+    assert method == 0
     # inputmap='car_large'
     env = CarMazeEnv()
     env.read_map(inputmap)
     env.image.show()
-    env.image.save(os.path.join(output_folder, 'env_' + inputmap.split('/')[-1].split('.')[0] + '.png'))
+    #env.image.save(os.path.join(output_folder, 'env_' + inputmap.split('/')[-1].split('.')[0] + '.png'))
     solver = Solver(env)
 
     print("solving ...")
@@ -87,5 +87,5 @@ if __name__ == "__main__":
     print('Showing map and path') 
     write_output(output_file, path, ans)
     env.image.show()
-    env.image.save(os.path.join(output_folder, f'{method}_' + inputmap.split('/')[-1].split('.')[0] + '.png'))
+    #env.image.save(os.path.join(output_folder, f'{method}_' + inputmap.split('/')[-1].split('.')[0] + '.png'))
 # %%
