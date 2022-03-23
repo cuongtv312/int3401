@@ -43,7 +43,7 @@ def write_output(output_file, path, cost):
             action = 'L'
         else:
             action ='R'
-        f.write('%s ' % action)
+        f.write('%s' % action)
     f.close()
     
 
