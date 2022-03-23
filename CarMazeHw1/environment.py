@@ -96,7 +96,7 @@ class CarMazeEnv:
             return x, y
 
         if d % 2 == 0:  # verical direction
-            v = (1 - d) * v
+            v = (d - 1) * v
             if self.is_inside(x, y + v) and not self._is_collided(self.h_walls, x, y, y + v):
                 return x, y + v
         else:  # hozi direction
@@ -109,13 +109,13 @@ class CarMazeEnv:
     # Trả về vị trí, d, v tương ứng với action
     # return x, y, d, v, cost of action
     def turn_left(self, x, y, d, v):
-        d += 1
+        d += 3
         d %= 4
         x, y = self._next_position(x, y, d, v)
         return x, y, d, v, self.fuel_cost + int(sqrt(v))
 
     def turn_right(self, x, y, d, v):
-        d -= 1
+        d += 1
         d %= 4
         x, y = self._next_position(x, y, d, v)
         return x, y, d, v, self.fuel_cost + int(sqrt(v))
@@ -135,7 +135,7 @@ class CarMazeEnv:
         return x, y, d, v, self.fuel_cost + int(sqrt(v))
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     print('Car maze environment')
 
     carmaze = CarMazeEnv()
