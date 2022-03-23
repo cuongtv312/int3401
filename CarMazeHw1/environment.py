@@ -17,7 +17,7 @@ class CarMazeEnv:
     def _is_hozirontal_wall(self, wall):
         if not (wall[1] == wall[3] or wall[0] == wall[2]):
             raise ValueError
-        return wall[1] == wall[3]  # có y0 = y1
+        return wall[0] == wall[2]  
 
     def read_map(self, input_file):
         with open(input_file, 'r') as f:
@@ -51,12 +51,17 @@ class CarMazeEnv:
                 x0, y0, x1, y1 = wall
                 try:
                     if self._is_hozirontal_wall(wall):
-                        self.h_walls.append(tuple([*sorted((x0, x1)), y0]))
+                        self.h_walls.append(tuple([*sorted((x0, x1)), max(y0, y1)]))
                     else:
-                        self.v_walls.append(tuple([*sorted((y0, y1)), x0]))
+                        self.v_walls.append(tuple([*sorted((y0, y1)), max(x0, x1)]))
                     # Draw wall to map image
-                    draw.line([(x0 * self.scale_factor, y0 * self.scale_factor),
-                               (x1 * self.scale_factor, y1 * self.scale_factor)],
+                    if x0 == x1:    
+                        draw.line([(x0 * self.scale_factor, max(y0, y1) * self.scale_factor),
+                               ((x1 + 1) * self.scale_factor, max(y0, y1) * self.scale_factor)],
+                              fill="black", width=4)
+                    if y0 == y1:
+                        draw.line([(max(x0, x1) * self.scale_factor, y0 * self.scale_factor),
+                               (max(x0, x1) * self.scale_factor, (y1 + 1) * self.scale_factor)],
                               fill="black", width=4)
                 except ValueError:
                     print('Error wall:', wall)
